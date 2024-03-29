@@ -6,7 +6,7 @@ export function upsert(haystack: any, needle: any) {
   for (let key = 0; key < result.length; key++) {
     let ThisKey = result[key];
 
-    deepUpdater(haystack, ThisKey.index, ThisKey.value);
+    deepUpdater(haystack, ThisKey.index, ThisKey.value, ThisKey.isFunction);
   }
 
   return haystack;

@@ -7,14 +7,16 @@ export function keyFinder(
   let result = [] as any;
 
   for (let key in obj) {
-    if (key === targetKey && (obj[key] ?? false)) {
+    let ThisKeyValue = obj[key];
+    if (key === targetKey && (ThisKeyValue ?? false)) {
       result.push({
-        index: [...currentKeys, ...(obj[key].index ?? [])],
-        value: obj[key].value,
+        index: [...currentKeys, ...(ThisKeyValue.index ?? [])],
+        value: ThisKeyValue.value,
+        isFunction: ThisKeyValue.isFunction,
       });
-    } else if (typeof obj[key] === "object") {
+    } else if (typeof ThisKeyValue === "object") {
       const nestedResult = keyFinder(
-        { obj: obj[key] },
+        { obj: ThisKeyValue },
         targetKey,
         [...currentKeys, key],
         true

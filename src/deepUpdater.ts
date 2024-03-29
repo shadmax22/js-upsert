@@ -1,13 +1,18 @@
-export default function deepUpdater(data: any, index: any, value: any) {
+export default function deepUpdater(
+  data: any,
+  index: any,
+  value: any,
+  isFunction: any = false
+) {
   if (index.length == 1) {
-    data[index[0]] = value;
+    data[index[0]] = isFunction ? value(data[index[0]]) : value;
     return data;
   }
 
   let NEW_VALUE = (data ?? [])[index[0]] ?? false;
 
   if (!NEW_VALUE) {
-    let N = createObject(index, value);
+    let N = createObject(index, value, isFunction);
 
     data[index[0]] = N;
 
@@ -15,14 +20,14 @@ export default function deepUpdater(data: any, index: any, value: any) {
   }
 
   index.shift();
-  return deepUpdater(NEW_VALUE, index, value);
+  return deepUpdater(NEW_VALUE, index, value, isFunction);
 }
 
-function createObject(index: any, value: any) {
+function createObject(index: any, value: any, isFunction: any = false) {
   let CLONED_INDEX = [...index];
   let NEW_OBJ;
 
-  if (CLONED_INDEX.length == 1) NEW_OBJ = value;
+  if (CLONED_INDEX.length == 1) NEW_OBJ = isFunction ? value({}) : value;
   else {
     NEW_OBJ = {} as any;
     CLONED_INDEX.shift();
