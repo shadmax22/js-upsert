@@ -9,12 +9,11 @@ export default defineConfig({
   build: {
     lib: {
       entry: "index.ts", // Entry point of your library
-      name: "j-upsert", // Name of your library (accessible in global scope)
+      name: "js-upsert", // Name of your library (accessible in global scope)
     },
     rollupOptions: {
       output: {
         format: "umd", // Universal Module Definition (UMD)
-        minify: false, // Disable minification
       },
     },
   },
