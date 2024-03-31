@@ -79,7 +79,7 @@ It will return:-
 }
 ```
 
-#### UPDATING A ARRAY
+#### UPDATING AN ARRAY
 
 Updating `user_data.login_data.data[1].time` to `11:00 PM`:-
 
@@ -92,7 +92,7 @@ upsert(user_data, {
 });
 
 
-// Here index provided is [1, "time"] undex a key "data"
+// Here index provided is [1, "time"] index a key "data"
 
 ```
 
@@ -102,7 +102,7 @@ Alternate way to update `user_data.login_data.data[0].time` to `12:00 PM`:-
 
 upsert(user_data, {
     login_data:{
-        data: set((old_key_value) => {...old_key_value, time: "11:00 PM"}, [1])
+        data: set((old_key_value) => ({...old_key_value, time: "11:00 PM"}), [1])
     }
 })
 
@@ -114,6 +114,6 @@ upsert(user_data, {
 
 `upsert(haystack, needle)` will have 2 parameters, Object & Needle.
 
-"Haystack" is the target variable which we have to update and needle is new value that has to be updated in target.
+"Haystack" is the target variable that we have to update and needle is the new value that has to be updated in the target.
 
-In needle, `set(value = string | object | function, index= null | [] )` function will point a update key, and update it.
+In needle, the `set(value = string | object | function, index= null | [] )` function will point an update key, and update it.
