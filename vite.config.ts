@@ -1,7 +1,17 @@
 import { defineConfig } from "vite";
+import dts from "vite-plugin-dts";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  plugins: [
+    dts({
+      // plugin options
+      include: ["**/*.ts"], // Paths to include
+      exclude: ["**/*.spec.ts"], // Paths to exclude
+      outDir: "dist", // Output directory for declaration files
+    }),
+    // other plugins...
+  ],
   server: {
     open: "/test/index.html",
   },

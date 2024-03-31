@@ -1,9 +1,10 @@
 {
   "name": "js-upsert",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "type": "module",
   "module": "dist/js-upsert.js",
   "main": "dist/js-upsert.umd.cjs",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/js-upsert.js",
@@ -13,13 +14,16 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "build-dts": "dts-bundle-generator -o dist/types/index.d.ts src/upsert.ts",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^7.1.1",
     "@typescript-eslint/parser": "^7.1.1",
-    "typescript": "^5.2.2"
+    "dts-bundle-generator": "^9.3.1",
+    "typescript": "^5.2.2",
+    "vite-plugin-dts": "^3.8.1"
   },
   "files": [
     "dist"
