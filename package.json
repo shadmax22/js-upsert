@@ -4,6 +4,7 @@
   "type": "module",
   "module": "dist/js-upsert.js",
   "main": "dist/js-upsert.umd.cjs",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/js-upsert.js",
