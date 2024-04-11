@@ -4,8 +4,13 @@ export default function deepUpdater(
   value: any,
   isFunction: any = false
 ) {
-  if (index.length == 1) {
-    data[index[0]] = isFunction ? value(data[index[0]]) : value;
+  if (index.length <= 1) {
+    if (index[0] ?? false) {
+      data[index[0]] = isFunction ? value(data[index[0] ?? index]) : value;
+    } else {
+      data = isFunction ? value(data) : value;
+    }
+
     return data;
   }
 

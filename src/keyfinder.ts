@@ -8,7 +8,7 @@ export function keyFinder(
 
   for (let key in obj) {
     let ThisKeyValue = obj[key];
-    if (key === targetKey && (ThisKeyValue ?? false)) {
+    if (key.includes(targetKey) && (ThisKeyValue ?? false)) {
       result.push({
         index: [...currentKeys, ...(ThisKeyValue.index ?? [])],
         value: ThisKeyValue.value,

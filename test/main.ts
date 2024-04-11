@@ -13,15 +13,8 @@ let user_data = {
     token: "13A131Q334",
   },
 };
-// let g = upsert(user_data, {
-//   login_data: {
-//     data: set((old_key_value) => ({ ...old_key_value, time: "11:00 PM" }), [1]),
-//   },
-// });
 let g = upsert(user_data, {
   login_data: {
-    data: set("11:00 PM", [1, "time"]),
+    data: set((old_key_value) => ({ ...old_key_value, time: "11:00 PM" }), [1]),
   },
 });
-
-console.log(g);
