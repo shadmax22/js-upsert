@@ -1,6 +1,6 @@
 {
   "name": "js-upsert",
-  "version": "0.2.22",
+  "version": "0.2.241",
   "type": "module",
   "module": "dist/js-upsert.js",
   "main": "dist/js-upsert.umd.cjs",
@@ -26,6 +26,16 @@
     "typescript": "^5.2.2",
     "vite-plugin-dts": "^3.8.1"
   },
+  "author": "MdShad",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:shadmax22/js-upsert.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/shadmax22/js-upsert/issues"
+  },
+  "homepage": "https://github.com/shadmax22/js-upsert#readme",
   "files": [
     "dist"
   ]

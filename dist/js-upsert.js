@@ -1,64 +1,67 @@
-function _(e, t = null) {
+function h(t, e = null) {
   return {
     ["$$@@@@__upsert_hook_" + Math.floor(Math.random() * 100)]: {
-      value: e,
-      index: t,
-      isFunction: typeof e == "function"
+      value: t,
+      index: e,
+      isFunction: typeof t == "function"
     }
   };
 }
-function s({ obj: e }, t, l = [], n = !1) {
+function f({ obj: t }, e, l = [], o = !1) {
   let r = [];
-  for (let o in e) {
-    let u = e[o];
-    if (o.includes(t) && (u ?? !1))
+  for (let n in t) {
+    let s = t[n];
+    if (n.includes(e) && (s ?? !1))
       r.push({
-        index: [...l, ...u.index ?? []],
-        value: u.value,
-        isFunction: u.isFunction
+        index: [...l, ...s.index ?? []],
+        value: s.value,
+        isFunction: s.isFunction
       });
-    else if (typeof u == "object") {
-      const p = s(
-        { obj: u },
-        t,
-        [...l, o],
+    else if (typeof s == "object") {
+      const _ = f(
+        { obj: s },
+        e,
+        [...l, n],
         !0
       );
-      r = r.concat(p.obj);
+      r = r.concat(_.obj);
     }
   }
-  return n ? { obj: r } : {
+  return o ? { obj: r } : {
     result: r
   };
 }
-function f(e, t, l, n = !1) {
-  if (t.length <= 1)
-    return t[0] ?? !1 ? e[t[0]] = n ? l(e[t[0] ?? t]) : l : e = n ? l(e) : l, e;
-  let r = (e ?? [])[t[0]] ?? !1;
+function u(t, e, l, o = !1) {
+  if (e.length <= 1) {
+    if (e.length > 0)
+      t[e[0]] = o ? l(t[e[0] ?? e]) : l;
+    else {
+      let n = o ? l(t) : l;
+      for (const s of Object.keys(n))
+        t[s] = n[s];
+    }
+    return t;
+  }
+  let r = (t ?? [])[e[0]] ?? !1;
   if (!r) {
-    let o = i(t, l, n);
-    return e[t[0]] = o, e;
+    let n = c(e, l, o);
+    return t[e[0]] = n, t;
   }
-  return t.shift(), f(r, t, l, n);
+  return e.shift(), u(r, e, l, o);
 }
-function i(e, t, l = !1) {
-  let n = [...e], r;
-  return n.length == 1 ? r = l ? t({}) : t : (r = {}, n.shift(), r[n[0]] = i(n, t)), r;
+function c(t, e, l = !1) {
+  let o = [...t], r;
+  return o.length == 1 ? r = l ? e({}) : e : (r = {}, o.shift(), r[o[0]] = c(o, e)), r;
 }
-function c(e, t, l = { returnType: "object" }) {
-  let { result: n } = s({ obj: t }, "$$@@@@__upsert_hook");
-  for (let r = 0; r < n.length; r++) {
-    let o = n[r];
-    o.index.length == 0 ? e = f(
-      e,
-      o.index,
-      o.value,
-      o.isFunction
-    ) : f(e, o.index, o.value, o.isFunction);
+function i(t, e, l = { returnType: "object" }) {
+  let { result: o } = f({ obj: e }, "$$@@@@__upsert_hook");
+  for (let r = 0; r < o.length; r++) {
+    let n = o[r];
+    u(t, n.index, n.value, n.isFunction);
   }
-  return ((l == null ? void 0 : l.returnType) ?? "object") == "object" ? { ...e } : [...e];
+  return ((l == null ? void 0 : l.returnType) ?? "object") == "object" ? { ...t } : [...t];
 }
 export {
-  _ as set,
-  c as upsert
+  h as set,
+  i as upsert
 };

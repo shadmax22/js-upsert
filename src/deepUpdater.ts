@@ -5,10 +5,17 @@ export default function deepUpdater(
   isFunction: any = false
 ) {
   if (index.length <= 1) {
-    if (index[0] ?? false) {
-      data[index[0]] = isFunction ? value(data[index[0] ?? index]) : value;
-    } else {
-      data = isFunction ? value(data) : value;
+    try {
+      if (index.length > 0) {
+        data[index[0]] = isFunction ? value(data[index[0] ?? index]) : value;
+      } else {
+        let _NEW_VALUE = isFunction ? value(data) : value;
+        for (const key of Object.keys(_NEW_VALUE)) {
+          data[key] = _NEW_VALUE[key];
+        }
+      }
+    } catch (error: any) {
+      console.error(`OBJECT KEY INDEX UPADATION FALED: `, error.message);
     }
 
     return data;
