@@ -1,6 +1,6 @@
 {
   "name": "js-upsert",
-  "version": "0.2.3",
+  "version": "0.2.31",
   "type": "module",
   "module": "dist/js-upsert.js",
   "main": "dist/js-upsert.umd.cjs",
@@ -27,6 +27,17 @@
     "vite-plugin-dts": "^3.8.1"
   },
   "author": "MdShad",
+  "keywords": [
+    "object manuplation",
+    "object",
+    "array",
+    "upsert",
+    "js-update",
+    "js-object",
+    "spread",
+    "js-spread",
+    "js-object"
+  ],
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com:shadmax22/js-upsert.git"

@@ -37,7 +37,7 @@ export default function deepUpdater(
     let _NEW_VALUE = isFunction ? value(data) : value;
 
     if (config.returnType == "array") {
-      data[0] = _NEW_VALUE;
+      data.push(_NEW_VALUE);
 
       return data;
     }
