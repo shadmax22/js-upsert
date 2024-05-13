@@ -1,67 +1,99 @@
-function h(t, e = null) {
+function p(e, t = null) {
+  let r = Math.floor(Math.random() * 100), n = typeof t == "string" ? R(t) : t;
   return {
-    ["$$@@@@__upsert_hook_" + Math.floor(Math.random() * 100)]: {
-      value: t,
-      index: e,
-      isFunction: typeof t == "function"
+    ["$$@@@@__upsert_hook_" + r]: {
+      value: e,
+      index: n,
+      isFunction: typeof e == "function"
     }
   };
 }
-function f({ obj: t }, e, l = [], o = !1) {
-  let r = [];
-  for (let n in t) {
-    let s = t[n];
-    if (n.includes(e) && (s ?? !1))
-      r.push({
-        index: [...l, ...s.index ?? []],
-        value: s.value,
-        isFunction: s.isFunction
+function R(e) {
+  return e.replace(/[\[\]'"]/g, "").split(".");
+}
+function y({ obj: e }, t, r = [], n = !1) {
+  let l = [];
+  for (let u in e) {
+    let o = e[u];
+    if (u.includes(t) && (o ?? !1))
+      l.push({
+        index: [...r, ...o.index ?? []],
+        value: o.value,
+        isFunction: o.isFunction
       });
-    else if (typeof s == "object") {
-      const _ = f(
-        { obj: s },
-        e,
-        [...l, n],
+    else if (typeof o == "object") {
+      const s = y(
+        { obj: o },
+        t,
+        [...r, u],
         !0
       );
-      r = r.concat(_.obj);
+      l = l.concat(s.obj);
     }
   }
-  return o ? { obj: r } : {
-    result: r
+  return n ? { obj: l } : {
+    result: l
   };
 }
-function u(t, e, l, o = !1) {
-  if (e.length <= 1) {
-    if (e.length > 0)
-      t[e[0]] = o ? l(t[e[0] ?? e]) : l;
-    else {
-      let n = o ? l(t) : l;
-      for (const s of Object.keys(n))
-        t[s] = n[s];
+function f(e, t, r, n = !1, l) {
+  if (t.length <= 1) {
+    if (t.length > 0)
+      try {
+        return e[t[0]] = n ? r(e[t[0] ?? t]) : r, e;
+      } catch {
+        throw `Unable to set value at index [${t}], ERROR: SETTER_FAILED`;
+      }
+    if (e === null || typeof e != "object")
+      throw Error(
+        "Initial value is not a object, ERROR: INITITAL_VALUE_PARSE_FAILED"
+      );
+    let o = n ? r(e) : r;
+    if (l.returnType == "array")
+      return e[0] = o, e;
+    if (typeof o != "object")
+      throw `Only object or array can be setted as a default value. Value given ${o}.`;
+    for (const s of Object.keys(o))
+      e[s] = o[s];
+    return e;
+  }
+  let u = (e ?? [])[t[0]] ?? !1;
+  if (!u) {
+    let o = E(t, r, n);
+    try {
+      e[t[0]] = o;
+    } catch {
+      throw `Unable to set value at index [${t}], ERROR: SETTER_FAILED`;
     }
-    return t;
+    return e;
   }
-  let r = (t ?? [])[e[0]] ?? !1;
-  if (!r) {
-    let n = c(e, l, o);
-    return t[e[0]] = n, t;
-  }
-  return e.shift(), u(r, e, l, o);
+  return t.shift(), f(u, t, r, n, l);
 }
-function c(t, e, l = !1) {
-  let o = [...t], r;
-  return o.length == 1 ? r = l ? e({}) : e : (r = {}, o.shift(), r[o[0]] = c(o, e)), r;
+function E(e, t, r = !1) {
+  let n = [...e], l;
+  return n.length == 1 ? l = r ? t(null) : t : (l = {}, n.shift(), l[n[0]] = E(n, t, r)), l;
 }
-function i(t, e, l = { returnType: "object" }) {
-  let { result: o } = f({ obj: e }, "$$@@@@__upsert_hook");
-  for (let r = 0; r < o.length; r++) {
-    let n = o[r];
-    u(t, n.index, n.value, n.isFunction);
+function c(e, t, r = { returnType: "object" }) {
+  Array.isArray(e) && (r.returnType = "array");
+  let { result: n } = y({ obj: t }, "$$@@@@__upsert_hook");
+  for (let l = 0; l < n.length; l++) {
+    let u = n[l];
+    f(
+      e,
+      u.index,
+      u.value,
+      u.isFunction,
+      r
+    );
   }
-  return ((l == null ? void 0 : l.returnType) ?? "object") == "object" ? { ...t } : [...t];
+  try {
+    return ((r == null ? void 0 : r.returnType) ?? "object") == "object" ? { ...e } : [...e];
+  } catch {
+    throw Error(
+      `Cannot return value as returnType '${r.returnType}'. Please try '${r.returnType == "array" ? "OBJECT" : "ARRAY"}' returnType, ERROR: RETURN_ERROR.`
+    );
+  }
 }
 export {
-  h as set,
-  i as upsert
+  p as set,
+  c as upsert
 };

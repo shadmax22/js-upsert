@@ -24,6 +24,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         format: "umd", // Universal Module Definition (UMD)
+        // sourcem`ap: true,
       },
     },
   },

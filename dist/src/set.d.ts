@@ -1,1 +1,1 @@
-export declare function set(value: any, index?: any[] | null): any;
+export declare function set(value: any, index?: any[] | null | string): any;

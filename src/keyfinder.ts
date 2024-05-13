@@ -6,6 +6,8 @@ export function keyFinder(
 ): any {
   let result = [] as any;
 
+  // ITERATING ALL KEYS IN OBJECT
+
   for (let key in obj) {
     let ThisKeyValue = obj[key];
     if (key.includes(targetKey) && (ThisKeyValue ?? false)) {
