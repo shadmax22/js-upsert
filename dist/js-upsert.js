@@ -1,5 +1,5 @@
-function p(e, t = null) {
-  let r = Math.floor(Math.random() * 100), n = typeof t == "string" ? R(t) : t;
+function R(e, t = null) {
+  let r = Math.floor(Math.random() * 100), n = typeof t == "string" ? p(t) : t;
   return {
     ["$$@@@@__upsert_hook_" + r]: {
       value: e,
@@ -8,7 +8,7 @@ function p(e, t = null) {
     }
   };
 }
-function R(e) {
+function p(e) {
   return e.replace(/[\[\]'"]/g, "").split(".");
 }
 function y({ obj: e }, t, r = [], n = !1) {
@@ -49,7 +49,7 @@ function f(e, t, r, n = !1, l) {
       );
     let o = n ? r(e) : r;
     if (l.returnType == "array")
-      return e[0] = o, e;
+      return e.push(o), e;
     if (typeof o != "object")
       throw `Only object or array can be setted as a default value. Value given ${o}.`;
     for (const s of Object.keys(o))
@@ -72,7 +72,7 @@ function E(e, t, r = !1) {
   let n = [...e], l;
   return n.length == 1 ? l = r ? t(null) : t : (l = {}, n.shift(), l[n[0]] = E(n, t, r)), l;
 }
-function c(e, t, r = { returnType: "object" }) {
+function h(e, t, r = { returnType: "object" }) {
   Array.isArray(e) && (r.returnType = "array");
   let { result: n } = y({ obj: t }, "$$@@@@__upsert_hook");
   for (let l = 0; l < n.length; l++) {
@@ -94,6 +94,6 @@ function c(e, t, r = { returnType: "object" }) {
   }
 }
 export {
-  p as set,
-  c as upsert
+  R as set,
+  h as upsert
 };
