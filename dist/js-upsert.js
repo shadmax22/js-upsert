@@ -1,92 +1,112 @@
-function R(e, t = null) {
-  let r = Math.floor(Math.random() * 100), n = typeof t == "string" ? p(t) : t;
+function h(e) {
+  return e.replace(/[\[\]'"]/g, "").split(".");
+}
+const y = (e, t) => {
+  let r = Math.floor(Math.random() * 1e6), n = typeof t == "string" ? h(t) : t;
   return {
     ["$$@@@@__upsert_hook_" + r]: {
       value: e,
-      index: n,
+      index: n ?? null,
       isFunction: typeof e == "function"
     }
   };
-}
-function p(e) {
-  return e.replace(/[\[\]'"]/g, "").split(".");
-}
-function y({ obj: e }, t, r = [], n = !1) {
-  let l = [];
-  for (let u in e) {
-    let o = e[u];
-    if (u.includes(t) && (o ?? !1))
-      l.push({
-        index: [...r, ...o.index ?? []],
-        value: o.value,
-        isFunction: o.isFunction
-      });
-    else if (typeof o == "object") {
-      const s = y(
-        { obj: o },
-        t,
-        [...r, u],
-        !0
-      );
-      l = l.concat(s.obj);
-    }
-  }
-  return n ? { obj: l } : {
-    result: l
-  };
-}
-function f(e, t, r, n = !1, l) {
+};
+y.at = (...e) => {
+  const t = e, r = t.pop();
+  return y(r, t);
+};
+function c(e, t, r, n = !1, o, l = []) {
+  const f = t;
   if (t.length <= 1) {
     if (t.length > 0)
       try {
         return e[t[0]] = n ? r(e[t[0] ?? t]) : r, e;
       } catch {
-        throw `Unable to set value at index [${t}], ERROR: SETTER_FAILED`;
+        throw `Setting Failed at index ${t[0]} of [${l.join(
+          " => "
+        )}] due to the type ${typeof e}, Only array or object is assignable`;
       }
     if (e === null || typeof e != "object")
       throw Error(
         "Initial value is not a object, ERROR: INITITAL_VALUE_PARSE_FAILED"
       );
-    let o = n ? r(e) : r;
-    if (l.returnType == "array")
-      return e.push(o), e;
-    if (typeof o != "object")
-      throw `Only object or array can be setted as a default value. Value given ${o}.`;
-    for (const s of Object.keys(o))
-      e[s] = o[s];
+    let s = n ? r(e) : r;
+    if (o.returnType == "array")
+      return e.push(s), e;
+    if (typeof s != "object")
+      throw `Object or array can be setted only as a default value. Type of value is ${typeof s}.`;
+    for (const i of Object.keys(s))
+      e[i] = s[i];
     return e;
   }
   let u = (e ?? [])[t[0]] ?? !1;
   if (!u) {
-    let o = E(t, r, n);
+    let s = p(t, r, n);
     try {
-      e[t[0]] = o;
+      e[t[0]] = s;
     } catch {
-      throw `Unable to set value at index [${t}], ERROR: SETTER_FAILED`;
+      throw `Setting Failed at index ${t[0]} of [${l.join(
+        " => "
+      )}] due to the type ${typeof e}, Only array or object is assignable`;
     }
     return e;
   }
-  return t.shift(), f(u, t, r, n, l);
+  return t.shift(), c(u, t, r, n, o, [
+    ...l,
+    f[0]
+  ]);
 }
-function E(e, t, r = !1) {
-  let n = [...e], l;
-  return n.length == 1 ? l = r ? t(null) : t : (l = {}, n.shift(), l[n[0]] = E(n, t, r)), l;
+function p(e, t, r = !1) {
+  let n = [...e], o;
+  return n.length == 1 ? o = r ? t(null) : t : (o = {}, n.shift(), o[n[0]] = p(n, t, r)), o;
 }
-function h(e, t, r = { returnType: "object" }) {
-  Array.isArray(e) && (r.returnType = "array");
-  let { result: n } = y({ obj: t }, "$$@@@@__upsert_hook");
-  for (let l = 0; l < n.length; l++) {
-    let u = n[l];
-    f(
+function a({ obj: e }, t, r = [], n = !1) {
+  let o = [];
+  for (let l in e) {
+    let f = e[l];
+    if (l.includes(t) && (f ?? !1))
+      o.push({
+        index: [...r, ...f.index ?? []],
+        value: f.value,
+        isFunction: f.isFunction
+      });
+    else if (typeof f == "object") {
+      const u = a(
+        { obj: f },
+        t,
+        [...r, l],
+        !0
+      );
+      o = o.concat(u.obj);
+    }
+  }
+  return n ? { obj: o } : {
+    result: o
+  };
+}
+function _(e, t, r = { returnType: "object" }) {
+  let { result: n } = a({ obj: t }, "$$@@@@__upsert_hook");
+  for (let o = 0; o < n.length; o++) {
+    let l = n[o];
+    c(
       e,
-      u.index,
-      u.value,
-      u.isFunction,
+      l.index,
+      l.value,
+      l.isFunction,
       r
     );
   }
+}
+function b(e, ...t) {
+  let r = {
+    returnType: "object"
+  };
+  const n = Array.isArray(e);
+  n && (r.returnType = "array");
+  for (let o of t)
+    _(e, o, r);
   try {
-    return ((r == null ? void 0 : r.returnType) ?? "object") == "object" ? { ...e } : [...e];
+    return n ? [...e] : { ...e };
   } catch {
     throw Error(
       `Cannot return value as returnType '${r.returnType}'. Please try '${r.returnType == "array" ? "OBJECT" : "ARRAY"}' returnType, ERROR: RETURN_ERROR.`
@@ -94,6 +114,6 @@ function h(e, t, r = { returnType: "object" }) {
   }
 }
 export {
-  R as set,
-  h as upsert
+  y as set,
+  b as upsert
 };

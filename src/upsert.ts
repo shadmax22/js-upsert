@@ -1,6 +1,6 @@
 import deepUpdater from "./deepUpdater";
 import { keyFinder } from "./keyfinder";
-import { SetPathSignature, SetValueSignature } from "./set";
+import { typeParam_upsert } from "../ts/upsert.type";
 
 type configType = {
   returnType?: "object" | "array";
@@ -25,54 +25,16 @@ export function upserter<HayStackType>(
   }
 }
 
-type HasOnlyPrivateKeys<T> = keyof T extends `$$@@@@__upsert_hook_${number}`
-  ? true
-  : false;
-
-// Conditional type to validate the key pattern
-type VerifySetSignature<T> = HasOnlyPrivateKeys<T> extends true
-  ? T extends SetPathSignature<any>
-    ? true
-    : false
-  : false;
-
-// Adjusted function with inferred type constraint
-
-type ExtractSetValue<T> = T extends SetValueSignature<infer U> ? U : never;
-
-export type InternalHookReturns<T> = T extends object
-  ? { [K in keyof T]: InternalHookReturns<T[K]> } | SetValueSignature<T>
-  : SetValueSignature<T> | SetPathSignature<T>;
-
-export type InternalHookReturnsPartial<T> = T extends object
-  ? {
-      [K in keyof T]: T[K] extends SetPathSignature<T>
-        ? SetPathSignature<T[K]>
-        : InternalHookReturnsPartial<T[K]>;
-    }
-  : SetPathSignature<T>;
-
-// InternalHookReturns<T[K]> |
-
-export type WithInternalHooks<T> = {
-  [K in keyof T]: InternalHookReturns<T[K]>;
-};
-
-type ConditionalType<H, T> = VerifySetSignature<T> extends true
-  ? ExtractSetValue<T> extends H
-    ? T
-    : never
-  : InternalHookReturns<H>;
-
-export function upsert<HayStackType, needle>(
+export function upsert<HayStackType, Needle>(
   haystack: HayStackType,
-  ...needles: Array<ConditionalType<HayStackType, needle>>
+  ...needles: typeParam_upsert<HayStackType, keyof Needle>[]
 ): HayStackType {
   let config = {
     returnType: "object",
   } as configType;
   const haystackArrayValidation = Array.isArray(haystack);
-  // if (haystackArrayValidation) config.returnType = "array"; // IF INITAL VALUE IS ARRAY THEN RETURN IN ARRAY
+
+  if (haystackArrayValidation) config.returnType = "array"; // IF INITAL VALUE IS ARRAY THEN RETURN IN ARRAY
 
   for (let needle of needles) {
     upserter(haystack, needle, config);
@@ -90,30 +52,3 @@ export function upsert<HayStackType, needle>(
     );
   }
 }
-
-// const set_exists = <T>(x: VerifySetSignature<T> extends true ? T : never) => {};
-
-// set_exists(set({ g: "green" }));
-
-// const haystack_set = <H, T>(
-//   x: H,
-//   y: VerifySetSignature<T> extends true
-//     ? ExtractSetValue<T> extends H
-//       ? T
-//       : never
-//     : never
-// ) => {};
-
-// haystack_set({ g: "green", k: "gr" }, set({ g: "green" }));
-// haystack_set({ g: "green", k: "gr" }, set({ g: "green", k: "g" }));
-
-// const haystack_set_2 = <H, T>(
-//   x: H,
-//   y: VerifySetSignature<T> extends true
-//     ? ExtractSetValue<T> extends H
-//       ? T
-//       : never
-//     : InternalHookReturns<H>
-// ) => {};
-
-// haystack_set_2({ g: "green", k: "gr" }, { g: set("22") });

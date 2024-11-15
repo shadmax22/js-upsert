@@ -31,4 +31,11 @@ export default defineConfig({
       },
     },
   },
+  test: {
+    // 👋 add the line below to add jsdom to vite
+    environment: "jsdom",
+    globals: true,
+
+    setupFiles: "./test/setup.js",
+  },
 });

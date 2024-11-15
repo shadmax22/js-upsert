@@ -1,9 +1,14 @@
 import { useEffect, useState } from "react";
-import { upsert } from "../../upsert";
-import { set } from "../../set";
+import { upsert } from "../../src/upsert";
+import { set } from "../../src/set";
+import React from "react";
 
 export function MainContainer() {
-  const [state, setState] = useState({});
+  const [state, setState] = useState({
+    data: {
+      green: "Gewwn",
+    },
+  });
 
   useEffect(() => {
     setState(
@@ -17,7 +22,7 @@ export function MainContainer() {
 
   return (
     <>
-      <h1>{state?.data?.green}</h1>
+      <h1 data-testid={"usestate-value"}>{state?.data?.green}</h1>
     </>
   );
 }

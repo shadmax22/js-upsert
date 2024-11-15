@@ -3,8 +3,11 @@ export default function deepUpdater(
   index: any,
   value: any,
   isFunction: any = false,
-  config: any
+  config: any,
+  drilled: any = []
 ) {
+  const orignal_index = index;
+
   if (index.length <= 1) {
     /* 
       
@@ -24,7 +27,9 @@ export default function deepUpdater(
 
         return data;
       } catch (e) {
-        throw `Unable to set value at index [${index}], ERROR: SETTER_FAILED`;
+        throw `Setting Failed at index ${index[0]} of [${drilled.join(
+          " => "
+        )}] due to the type ${typeof data}, Only array or object is assignable`;
       }
     }
 
@@ -43,7 +48,7 @@ export default function deepUpdater(
     }
 
     if (typeof _NEW_VALUE != "object")
-      throw `Only object or array can be setted as a default value. Value given ${_NEW_VALUE}.`;
+      throw `Object or array can be setted only as a default value. Type of value is ${typeof _NEW_VALUE}.`;
 
     for (const key of Object.keys(_NEW_VALUE)) {
       data[key] = _NEW_VALUE[key];
@@ -60,14 +65,19 @@ export default function deepUpdater(
     try {
       data[index[0]] = N;
     } catch (e) {
-      throw `Unable to set value at index [${index}], ERROR: SETTER_FAILED`;
+      throw `Setting Failed at index ${index[0]} of [${drilled.join(
+        " => "
+      )}] due to the type ${typeof data}, Only array or object is assignable`;
     }
 
     return data;
   }
 
   index.shift();
-  return deepUpdater(NEW_VALUE, index, value, isFunction, config);
+  return deepUpdater(NEW_VALUE, index, value, isFunction, config, [
+    ...drilled,
+    orignal_index[0],
+  ]);
 }
 
 function createObject(index: any, value: any, isFunction: any = false) {
