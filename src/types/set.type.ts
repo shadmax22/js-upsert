@@ -1,6 +1,3 @@
-import { set } from "../src/set";
-import { typeParam_upsert } from "./upsert.type";
-
 export interface SetValueSignature<T> {
   [key: `$$@@@@__upsert_hook_${number}`]: {
     value: T;
@@ -32,15 +29,6 @@ export type type_setAt<T> = T extends object
       [K in keyof T]: [K, TypeReturner<K>] | [K, ...type_setAt<T[K]>];
     }[keyof T]
   : [TypeReturner<T>];
-
-export type ConvertToNestedObject<T extends any[]> = T extends [
-  infer First extends any,
-  infer Last extends any
-]
-  ? { [K in First]: TypeReturner<Last> } // Base case for the last two elements
-  : T extends [infer First extends any, ...infer Rest extends any[]]
-  ? { [K in First]: ConvertToNestedObject<Rest> }
-  : never;
 
 export type typeReturn_setAt<
   Path extends (string | number)[],

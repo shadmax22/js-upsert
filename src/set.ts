@@ -1,4 +1,4 @@
-import { Ignore, SetValueSignature } from "../ts/set.type";
+import { Ignore, SetValueSignature } from "./types/set.type";
 
 function getArrayFromStringIndex(str: string) {
   // Remove all brackets and quotes, then split by period

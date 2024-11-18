@@ -9,9 +9,9 @@ export default defineConfig({
 
     dts({
       // plugin options
-      include: ["**/*.ts"], // Paths to include
+      include: ["**/*.ts", "src/**/*.d.ts"], // Paths to include
       exclude: ["**/*.spec.ts"], // Paths to exclude
-      outDir: "dist", // Output directory for declaration files
+      outDir: "dist/types", // Output directory for declaration files
     }),
     // other plugins...
   ],

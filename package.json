@@ -1,6 +1,6 @@
 {
   "name": "js-upsert",
-  "version": "0.2.4",
+  "version": "0.2.435",
   "type": "module",
   "module": "dist/js-upsert.js",
   "main": "dist/js-upsert.umd.cjs",
@@ -9,7 +9,7 @@
     ".": {
       "import": "./dist/js-upsert.js",
       "require": "./dist/js-upsert.umd.cjs",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/types/index.d.ts"
     }
   },
   "scripts": {

@@ -1,4 +1,4 @@
-import { Ignore, SetValueSignature } from '../ts/set.type';
+import { Ignore, SetValueSignature } from './types/set.type';
 
 /**
  * Sets a value with a specific index.

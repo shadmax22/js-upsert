@@ -1,6 +1,6 @@
 import deepUpdater from "./deepUpdater";
 import { keyFinder } from "./keyfinder";
-import { typeParam_upsert } from "../ts/upsert.type";
+import { typeParam_upsert } from "./types/upsert.type";
 
 type configType = {
   returnType?: "object" | "array";
@@ -25,9 +25,9 @@ export function upserter<HayStackType>(
   }
 }
 
-export function upsert<HayStackType, Needle>(
+export function upsert<HayStackType>(
   haystack: HayStackType,
-  ...needles: typeParam_upsert<HayStackType, keyof Needle>[]
+  ...needles: typeParam_upsert<HayStackType>[]
 ): HayStackType {
   let config = {
     returnType: "object",
