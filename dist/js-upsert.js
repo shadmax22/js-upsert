@@ -1,26 +1,26 @@
 function h(e) {
   return e.replace(/[\[\]'"]/g, "").split(".");
 }
-const y = (e, t) => {
-  let r = Math.floor(Math.random() * 1e6), n = typeof t == "string" ? h(t) : t;
+const c = (e, t) => {
+  let r = Math.floor(Math.random() * 1e6), o = typeof t == "string" ? h(t) : t;
   return {
     ["$$@@@@__upsert_hook_" + r]: {
       value: e,
-      index: n ?? null,
+      index: o ?? null,
       isFunction: typeof e == "function"
     }
   };
 };
-y.at = (...e) => {
+c.at = (...e) => {
   const t = e, r = t.pop();
-  return y(r, t);
+  return c(r, t);
 };
-function c(e, t, r, n = !1, o, l = []) {
-  const f = t;
+function y(e, t, r, o = !1, n, l = []) {
+  const u = t;
   if (t.length <= 1) {
     if (t.length > 0)
       try {
-        return e[t[0]] = n ? r(e[t[0] ?? t]) : r, e;
+        return e[t[0]] = o ? r(e[t[0] ?? t]) : r, e;
       } catch {
         throw `Setting Failed at index ${t[0]} of [${l.join(
           " => "
@@ -30,20 +30,20 @@ function c(e, t, r, n = !1, o, l = []) {
       throw Error(
         "Initial value is not a object, ERROR: INITITAL_VALUE_PARSE_FAILED"
       );
-    let s = n ? r(e) : r;
-    if (o.returnType == "array")
-      return e.push(s), e;
-    if (typeof s != "object")
-      throw `Object or array can be setted only as a default value. Type of value is ${typeof s}.`;
-    for (const i of Object.keys(s))
-      e[i] = s[i];
+    let f = o ? r(e) : r;
+    if (n.returnType == "array")
+      return e.push(f), e;
+    if (typeof f != "object")
+      throw `Object or array can be setted only as a default value. Type of value is ${typeof f}.`;
+    for (const s of Object.keys(f))
+      e[s] = f[s];
     return e;
   }
-  let u = (e ?? [])[t[0]] ?? !1;
-  if (!u) {
-    let s = p(t, r, n);
+  let i = (e ?? [])[t[0]] ?? !1;
+  if (!i) {
+    let f = p(t, r, o);
     try {
-      e[t[0]] = s;
+      e[t[0]] = f;
     } catch {
       throw `Setting Failed at index ${t[0]} of [${l.join(
         " => "
@@ -51,44 +51,44 @@ function c(e, t, r, n = !1, o, l = []) {
     }
     return e;
   }
-  return t.shift(), c(u, t, r, n, o, [
+  return t.shift(), y(i, t, r, o, n, [
     ...l,
-    f[0]
+    u[0]
   ]);
 }
 function p(e, t, r = !1) {
-  let n = [...e], o;
-  return n.length == 1 ? o = r ? t(null) : t : (o = {}, n.shift(), o[n[0]] = p(n, t, r)), o;
+  let o = [...e], n;
+  return o.length == 1 ? n = r ? t(null) : t : (n = {}, o.shift(), n[o[0]] = p(o, t, r)), n;
 }
-function a({ obj: e }, t, r = [], n = !1) {
-  let o = [];
+function a({ obj: e }, t, r = [], o = !1) {
+  let n = [];
   for (let l in e) {
-    let f = e[l];
-    if (l.includes(t) && (f ?? !1))
-      o.push({
-        index: [...r, ...f.index ?? []],
-        value: f.value,
-        isFunction: f.isFunction
+    let u = e[l];
+    if (l.includes(t) && (u ?? !1))
+      n.push({
+        index: [...r, ...u.index ?? []],
+        value: u.value,
+        isFunction: u.isFunction
       });
-    else if (typeof f == "object") {
-      const u = a(
-        { obj: f },
+    else if (typeof u == "object") {
+      const i = a(
+        { obj: u },
         t,
         [...r, l],
         !0
       );
-      o = o.concat(u.obj);
+      n = n.concat(i.obj);
     }
   }
-  return n ? { obj: o } : {
-    result: o
+  return o ? { obj: n } : {
+    result: n
   };
 }
 function _(e, t, r = { returnType: "object" }) {
-  let { result: n } = a({ obj: t }, "$$@@@@__upsert_hook");
-  for (let o = 0; o < n.length; o++) {
-    let l = n[o];
-    c(
+  let { result: o } = a({ obj: t }, "$$@@@@__upsert_hook");
+  for (let n = 0; n < o.length; n++) {
+    let l = o[n];
+    y(
       e,
       l.index,
       l.value,
@@ -101,12 +101,27 @@ function b(e, ...t) {
   let r = {
     returnType: "object"
   };
-  const n = Array.isArray(e);
-  n && (r.returnType = "array");
-  for (let o of t)
-    _(e, o, r);
+  const o = Array.isArray(e);
+  o && (r.returnType = "array");
+  for (let n of t)
+    _(e, n, r);
   try {
-    return n ? [...e] : { ...e };
+    return new Proxy(e, {
+      get(n, l, u) {
+        return n = o ? [...e] : { ...e }, l === "get" ? () => u : l === "at" ? (...i) => {
+          if (i.length <= 1)
+            throw "keys.length is less than 2, need atleast 2 values to differentiate index and value";
+          const f = i[i.length - 1], s = i;
+          return s.pop(), y(
+            e,
+            s,
+            f,
+            typeof f == "function",
+            r
+          ), u;
+        } : Reflect.get(n, l, u);
+      }
+    });
   } catch {
     throw Error(
       `Cannot return value as returnType '${r.returnType}'. Please try '${r.returnType == "array" ? "OBJECT" : "ARRAY"}' returnType, ERROR: RETURN_ERROR.`
@@ -114,6 +129,6 @@ function b(e, ...t) {
   }
 }
 export {
-  y as set,
+  c as set,
   b as upsert
 };

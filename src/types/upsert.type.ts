@@ -13,9 +13,25 @@ import { set } from "../set";
 //   : false;
 //
 
+type GetType<Value> = Value extends string
+  ? string
+  : Value extends number
+  ? number
+  : Value extends boolean
+  ? boolean
+  : Value extends Array<any>
+  ? GetType<Value[number]>[]
+  : Value extends object
+  ? {
+      [Key in keyof Value]: GetType<Value[Key]>;
+    }
+  : "unknown";
+
 type InternalHookReturns<T> = T extends object
-  ? { [K in keyof T]: InternalHookReturns<T[K]> } | ReturnType<typeof set<T>>
-  : ReturnType<typeof set<T>>;
+  ?
+      | { [K in keyof T]: InternalHookReturns<T[K]> }
+      | ReturnType<typeof set<GetType<T>>>
+  : ReturnType<typeof set<GetType<T>>>;
 
 // type VerifySetSignature<T> = HasOnlyPrivateKeys<T> extends true ? true : false;
 

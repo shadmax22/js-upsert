@@ -50,7 +50,10 @@ describe("upsert core", () => {
     expect(updated.address.street).toBe("Mumbai");
   });
   it("Updating value without nest", () => {
-    const updated = upsert(companyDetails, set({ name: "Joe" }));
+    const updated = upsert(
+      companyDetails,
+      set((t) => ({ ...t, name: "Joe" }))
+    );
 
     expect(updated.name).toBe("Joe");
   });
@@ -85,6 +88,17 @@ describe("upsert core", () => {
     });
 
     expect(updated.name).toBe("g");
+  });
+  it("upsert.at", () => {
+    const updated = upsert(companyDetails, { name: set("My Company") })
+      .at("name", "Update 2")
+      .at("name", "Update 3")
+      .get();
+    expect(updated.name).toBe("Update 3");
+    const updated_2 = upsert(companyDetails)
+      .at("name", "Update 2")
+      .at("name", "Update 3");
+    expect(updated_2.name).toBe("Update 3");
   });
 });
 
