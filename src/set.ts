@@ -38,3 +38,7 @@ set.at = (...param: any[]) => {
 
   return set(final_value, index) as unknown as Ignore;
 };
+
+export default {
+  set,
+};

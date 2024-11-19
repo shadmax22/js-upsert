@@ -12,3 +12,10 @@ export declare const set: {
     <T>(value: T | ((prevValue: T) => T), index?: null | (string | number)[] | string): SetValueSignature<T>;
     at(...param: any[]): Ignore;
 };
+declare const _default: {
+    set: {
+        <T>(value: T | ((prevValue: T) => T), index?: string | (string | number)[] | null | undefined): SetValueSignature<T>;
+        at(...param: any[]): Ignore;
+    };
+};
+export default _default;

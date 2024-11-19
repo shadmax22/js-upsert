@@ -89,16 +89,27 @@ describe("upsert core", () => {
 
     expect(updated.name).toBe("g");
   });
-  it("upsert.at", () => {
+});
+
+describe("upsert.at", () => {
+  it("iterative", () => {
+    const updated_2 = upsert(companyDetails)
+      .at("name", "Update 2")
+      .at("name", "Update 3");
+    expect(updated_2.name).toBe("Update 3");
+  });
+  it("get", () => {
     const updated = upsert(companyDetails, { name: set("My Company") })
       .at("name", "Update 2")
       .at("name", "Update 3")
       .get();
     expect(updated.name).toBe("Update 3");
+  });
+  it("value as function", () => {
     const updated_2 = upsert(companyDetails)
       .at("name", "Update 2")
-      .at("name", "Update 3");
-    expect(updated_2.name).toBe("Update 3");
+      .at("name", (pv: string) => pv + " With Added Value");
+    expect(updated_2.name).toBe("Update 2 With Added Value");
   });
 });
 

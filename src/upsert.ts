@@ -1,6 +1,6 @@
 import deepUpdater from "./deepUpdater";
 import { keyFinder } from "./keyfinder";
-import { typeParam_upsert } from "./types/upsert.type";
+import { typeParam_upsert, UpsertType } from "./types/upsert.type";
 
 type configType = {
   returnType?: "object" | "array";
@@ -24,16 +24,6 @@ export function upserter<HayStackType>(
     );
   }
 }
-
-type UpsertType<HayStackType> = {
-  (
-    haystack: HayStackType,
-    ...needles: typeParam_upsert<HayStackType>[]
-  ): HayStackType; // The function itself
-} & HayStackType & {
-    at: (...keys: [...(string | number)[], any]) => UpsertType<HayStackType>; // The `at` method
-    get: () => HayStackType; // The `at` method
-  };
 
 export function upsert<HayStackType>(
   haystack: HayStackType,
@@ -93,3 +83,7 @@ export function upsert<HayStackType>(
     );
   }
 }
+
+export default {
+  upsert,
+};

@@ -22,12 +22,18 @@ export default defineConfig({
   build: {
     lib: {
       entry: "index.ts", // Entry point of your library
-      name: "js-upsert", // Name of your library (accessible in global scope)
+      name: "upsert", // Name of your library (accessible in global scope)
+      fileName: (format) => `js-upsert.${format}.js`, // Output filenames for all formats
+
+      formats: ["es", "umd"], // Output formats
     },
     rollupOptions: {
       output: {
         format: "umd", // Universal Module Definition (UMD)
         // sourcem`ap: true,
+      },
+      globals: {
+        // Add external dependencies here if necessary
       },
     },
   },

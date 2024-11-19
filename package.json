@@ -1,6 +1,6 @@
 {
   "name": "js-upsert",
-  "version": "0.2.436",
+  "version": "0.2.4364",
   "type": "module",
   "module": "dist/js-upsert.js",
   "main": "dist/js-upsert.umd.cjs",
@@ -63,7 +63,5 @@
   "files": [
     "dist"
   ],
-  "dependencies": {
-    "@vitejs/plugin-react": "^4.3.1"
-  }
+  "dependencies": {}
 }

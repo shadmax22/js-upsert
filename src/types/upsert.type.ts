@@ -12,6 +12,17 @@ import { set } from "../set";
 //     : false
 //   : false;
 //
+export type UpsertType<HayStackType> = {
+  (
+    haystack: HayStackType,
+    ...needles: typeParam_upsert<HayStackType>[]
+  ): HayStackType; // The function itself
+} & HayStackType & {
+    at: (
+      ...keys: [...(string | number)[], unknown | ((pv: any) => unknown)]
+    ) => UpsertType<HayStackType>; // The `at` method
+    get: () => HayStackType; // The `at` method
+  };
 
 type GetType<Value> = Value extends string
   ? string
