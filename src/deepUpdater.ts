@@ -27,6 +27,8 @@ export default function deepUpdater(
 
         return data;
       } catch (e) {
+        console.error(e);
+
         throw `Setting Failed at index ${index[0]} of [${drilled.join(
           " => "
         )}] due to the type ${typeof data}, Only array or object is assignable`;
